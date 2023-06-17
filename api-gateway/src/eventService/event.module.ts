@@ -13,7 +13,7 @@ import { EventService } from './event.service';
         options: {
           client: {
             clientId: 'event',
-            brokers: ['localhost:9092'],
+            brokers: ['kafka:9092'],
           },
           consumer: {
             groupId: 'event-consumer',

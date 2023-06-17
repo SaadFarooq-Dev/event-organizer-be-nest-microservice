@@ -13,7 +13,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         options: {
           client: {
             clientId: 'user',
-            brokers: ['localhost:9092'],
+            brokers: ['kafka:9092'],
           },
           consumer: {
             groupId: 'user-consumer',
