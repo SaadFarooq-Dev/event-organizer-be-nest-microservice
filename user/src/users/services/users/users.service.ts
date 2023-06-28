@@ -50,8 +50,8 @@ export class UsersService {
     };
   }
 
-  async updateUser(data: { id: string; updateData: object }) {
-    const user = await this.userRepository.findOneBy({ id: data.id });
+  async updateUser(data: { user_id: string; updateData: object }) {
+    const user = await this.userRepository.findOneBy({ id: data.user_id });
     if (!user) {
       throw new NotFoundException('User not found');
     }

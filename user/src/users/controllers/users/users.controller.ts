@@ -41,7 +41,7 @@ export class UsersController {
   @MessagePattern('user.update')
   @UsePipes(ValidationPipe)
   async updateUser(
-    @Payload(ValidationPipe) data: { id: string; updateData: object },
+    @Payload(ValidationPipe) data: { user_id: string; updateData: object },
   ) {
     const user = await this.userService.updateUser(data);
     const response = { success: true, user: user };
@@ -53,7 +53,7 @@ export class UsersController {
   @UseGuards(RpcContextSwitchGuard, LocalAuthGuard)
   async login(@Payload(ValidationPipe) req: any) {
     const token = await this.userService.login(req.user);
-    const response = { success: true, access_token: token };
+    const response = { success: true, access_token: token.access_token };
     return response;
   }
 }

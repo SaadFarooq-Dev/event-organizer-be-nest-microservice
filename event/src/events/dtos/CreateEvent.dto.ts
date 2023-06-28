@@ -7,7 +7,19 @@ export class CreateEventDto {
   title: string;
 
   @IsNotEmpty()
+  @MinLength(3)
+  @IsString()
+  description: string;
+
+  @IsNotEmpty()
+  @IsString()
+  location: string;
+
+  @IsNotEmpty()
   startDate: 'timestamp';
+
+  @IsNotEmpty()
+  endDate: 'timestamp';
 
   @IsNotEmpty()
   @IsString()

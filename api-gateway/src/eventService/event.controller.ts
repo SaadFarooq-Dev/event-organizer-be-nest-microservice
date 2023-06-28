@@ -19,6 +19,9 @@ import { JwtAuthGuard } from '../config/passport/JwtStrategy/jwt-auth-guard';
 import { registerResponsePatterns } from '../helpers/registerResponsePatterns';
 import { EVENTRESPONSEPATTERNS } from '../utils/constants';
 import { CreateEventDto } from 'src/dtos/create-event-request.dto';
+import { RoleGuard } from 'src/config/auth/role/role.guard';
+import { Roles } from 'src/config/auth/roles/roles.decorator';
+import { Role } from 'src/utils/role.enum';
 
 @Controller()
 export class EventController implements OnModuleInit, OnModuleDestroy {
@@ -34,10 +37,10 @@ export class EventController implements OnModuleInit, OnModuleDestroy {
   }
 
   @Post('event/create')
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Organizer)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @UsePipes(ValidationPipe)
   createEvent(@Request() req, @Body() createEventDto: CreateEventDto) {
-    console.log(req.user.id);
     const data = this.eventService.createEvent(req.user.id, createEventDto);
     return data;
   }
@@ -50,6 +53,7 @@ export class EventController implements OnModuleInit, OnModuleDestroy {
     return data;
   }
   @Get('event/id/:id')
+  @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationPipe)
   getUser(@Param(ValidationPipe) id: { id: string }) {
     const data = this.eventService.getEvent(id.id);
@@ -64,6 +68,36 @@ export class EventController implements OnModuleInit, OnModuleDestroy {
     const event_id = id;
     const updateData = req.body;
     const data = this.eventService.updateEvent(user_id, event_id, updateData);
+    return data;
+  }
+
+  @Post('event/:id/attendee')
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(ValidationPipe)
+  addEventAttendee(@Request() req, @Param(ValidationPipe) id: { id: string }) {
+    const payload = {
+      user_id: req?.user?.id,
+      event_id: id.id,
+    };
+    const data = this.eventService.addEventAttendee(payload);
+    return data;
+  }
+
+  @Get('event/attendee')
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(ValidationPipe)
+  getJoinedEvents(@Request() req) {
+    const user_id = req?.user?.id;
+    const data = this.eventService.getJoinedEvents(user_id);
+    return data;
+  }
+
+  @Get('event/user')
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(ValidationPipe)
+  getUserEvents(@Request() req) {
+    const user_id = req?.user?.id;
+    const data = this.eventService.getUserEvents(user_id);
     return data;
   }
 }

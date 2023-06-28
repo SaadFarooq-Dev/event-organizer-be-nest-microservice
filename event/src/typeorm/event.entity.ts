@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Attendee } from './attende.entity';
+import { Attendee } from './attendee.entity';
 
 @Entity()
 export class Event {
@@ -20,6 +20,18 @@ export class Event {
   title: string;
 
   @Column({
+    nullable: false,
+    default: '',
+  })
+  description: string;
+
+  @Column({
+    nullable: false,
+    default: '',
+  })
+  location: string;
+
+  @Column({
     name: 'start_date',
     nullable: false,
     type: 'timestamp',
@@ -28,6 +40,13 @@ export class Event {
   startDate: Date;
 
   @Column({
+    name: 'end_date',
+    nullable: false,
+    type: 'timestamp',
+  })
+  endDate: Date;
+
+  @Column('uuid', {
     nullable: false,
   })
   user_id: string;

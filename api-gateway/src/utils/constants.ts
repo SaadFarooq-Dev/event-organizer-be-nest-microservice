@@ -10,4 +10,7 @@ export const EVENTRESPONSEPATTERNS = [
   'event.all',
   'event.get',
   'event.update',
+  'event.add.attendee',
+  'event.user.get',
+  'event.attendee.joined',
 ];

@@ -1,5 +1,6 @@
 import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import { AddEventAttendeeDto } from 'src/events/dtos/AddEventAttendee.dto';
 import { CreateEventDto } from 'src/events/dtos/CreateEvent.dto';
 import { EventsService } from 'src/events/services/events/events.service';
 
@@ -43,6 +44,39 @@ export class EventsController {
   ) {
     const event = await this.eventService.updateEvent(data);
     const response = { success: true, event: event };
+    return response;
+  }
+
+  @MessagePattern('event.add.attendee')
+  @UsePipes(ValidationPipe)
+  async addEventAttendee(
+    @Payload(ValidationPipe)
+    data: AddEventAttendeeDto,
+  ) {
+    const event = await this.eventService.addEventAttendee(data);
+    const response = { success: true, event: event };
+    return response;
+  }
+
+  @MessagePattern('event.attendee.joined')
+  @UsePipes(ValidationPipe)
+  async getJoinedEvents(
+    @Payload(ValidationPipe)
+    id: string,
+  ) {
+    const events = await this.eventService.getJoinedEvents(id);
+    const response = { success: true, event: events };
+    return response;
+  }
+
+  @MessagePattern('event.user.get')
+  @UsePipes(ValidationPipe)
+  async getUserEvents(
+    @Payload(ValidationPipe)
+    user_id: string,
+  ) {
+    const events = await this.eventService.getUserEvents(user_id);
+    const response = { success: true, event: events };
     return response;
   }
 }

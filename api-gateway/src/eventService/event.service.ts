@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
+import { AddEventAttendeeDto } from 'src/dtos/add-event-attendee.dto';
 import { CreateEventDto } from 'src/dtos/create-event-request.dto';
 import { CreateEvent } from 'src/Events/event/create-event.event';
 
@@ -9,10 +10,20 @@ export class EventService {
     @Inject('EVENT_SERVICE') private readonly eventClient: ClientKafka,
   ) {}
 
-  async createEvent(user_id: string, { title, startDate }: CreateEventDto) {
+  async createEvent(
+    user_id: string,
+    { title, description, location, startDate, endDate }: CreateEventDto,
+  ) {
     const res = await this.eventClient.send(
       'event.create',
-      new CreateEvent(title, startDate, user_id),
+      new CreateEvent(
+        title,
+        description,
+        location,
+        startDate,
+        endDate,
+        user_id,
+      ),
     );
     return res;
   }
@@ -23,6 +34,24 @@ export class EventService {
       event_id,
       updateData,
     });
+    return res;
+  }
+
+  async addEventAttendee({ user_id, event_id }: AddEventAttendeeDto) {
+    const res = await this.eventClient.send('event.add.attendee', {
+      user_id,
+      event_id,
+    });
+    return res;
+  }
+
+  async getJoinedEvents(user_id: string) {
+    const res = await this.eventClient.send('event.attendee.joined', user_id);
+    return res;
+  }
+
+  async getUserEvents(user_id: string) {
+    const res = await this.eventClient.send('event.user.get', user_id);
     return res;
   }
 
